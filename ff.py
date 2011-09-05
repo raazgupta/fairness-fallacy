@@ -1,3 +1,7 @@
+#This script can be run on your computer as long as you have 
+#Python and BeautifulSoup installed
+#Enjoy!
+
 from BeautifulSoup import BeautifulSoup
 import urllib2
 import re
@@ -10,23 +14,26 @@ def findRegex(findStr, regexStr):
     return found
 
 def fairnessFunction(fairStr, idNum, fairNum):
-    fairRegex = r'.*[Ff][Aa][Ii][Rr].*'
+    global fairList
+    
+    fairRegex = r'.*[Ff][a][i][r].*'
     isFair = findRegex(fairStr, fairRegex)
-    goodLookingRegex = r'.*[gG][oO][oO][dD].*[lL][oO][oO][kK][iI][nN][gG].*'
+    goodLookingRegex = r'.*[gG][o][o][d].*[lL][o][o][k][i][n][g].*'
     isGoodLooking = findRegex(fairStr, goodLookingRegex)
-    beautifulRegex = r'.*[bB][eE][aA][uU][tT][iI][fF][uU][lL].*'
+    beautifulRegex = r'.*[bB][e][a][u][t][i][f][u][l].*'
     isBeautiful = findRegex(fairStr, beautifulRegex)
     if isFair == True or isGoodLooking == True or isBeautiful == True:
         fairNum = fairNum + 1
         #print str(idNum) + " needs Fair:" + fairStr
+        fairList.append(fairStr)
     return fairNum
 
 def intelligenceFunction(inStr, idNum, inNum):
-    intelligenceRegex = r'.*[iI][nN][tT][eE][lL][lL][iI][gG][eE][nN][tT].*'
+    intelligenceRegex = r'.*[iI][n][t][e][l][l][i][g][e][n][t].*'
     isIntelligent = findRegex(inStr, intelligenceRegex)
-    smartRegex = r'.*[sS][mM][aA][rR][tT].*'
+    smartRegex = r'.*[sS][m][a][r][t].*'
     isSmart = findRegex(inStr, smartRegex)
-    educatedRegex = r'.*[eE][dD][uU][cC][aA][tT][eE][dD].*'
+    educatedRegex = r'.*[eE][d][u][c][a][t][e][d].*'
     isEducated = findRegex(inStr, educatedRegex)
     if isIntelligent == True or isSmart == True or isEducated == True:
         inNum = inNum + 1
@@ -34,6 +41,8 @@ def intelligenceFunction(inStr, idNum, inNum):
     return inNum
 
 def girlIntelligenceFunction(ginStr, idNum, ginNum):
+    global intelligentList
+    
     adFound = False
     
     #Synonyms for intelligence
@@ -82,8 +91,8 @@ def girlIntelligenceFunction(ginStr, idNum, ginNum):
                     
     if adFound == True:
         ginNum = ginNum + 1
-        print str(idNum) + " needs Intelligent Bride:" + ginStr
-    
+        #print str(idNum) + " needs Intelligent Bride:" + ginStr
+        intelligentList.append(ginStr)
     return ginNum
     
 
@@ -97,6 +106,10 @@ fairNum = 0.0
 inNum = 0.0
 #number of intelligent girl requests
 ginNum = 0.0
+#list of fair ads
+fairList = []
+#list of intelligent girl ads
+intelligentList = []
 
 for pageNum in range(1,11):
     print "Processing page " + str(pageNum) + " ..."
@@ -121,21 +134,31 @@ for pageNum in range(1,11):
         #process the string for interesting patterns
         #find strings with the word fair in it
         fairNum = fairnessFunction(oddStr, totalAds, fairNum)
-        inNum = intelligenceFunction(oddStr, totalAds, inNum)
+        #inNum = intelligenceFunction(oddStr, totalAds, inNum)
         ginNum = girlIntelligenceFunction(oddStr, totalAds, ginNum)
         #Even numbered classified information
         evenStr = classified.nextSibling.string 
         #find strings with the word fair in it
         fairNum = fairnessFunction(evenStr, totalAds, fairNum)
-        inNum = intelligenceFunction(evenStr, totalAds, inNum)
+        #inNum = intelligenceFunction(evenStr, totalAds, inNum)
         ginNum = girlIntelligenceFunction(evenStr, totalAds, ginNum)
         
         totalAds = totalAds + 2
     
 #Print a percentage of number asking for Fair vs total Ads
 fairPer = fairNum / totalAds * 100.0
+fairPer = int(fairPer)
 print "Percentage valuing Fairness: " + str(fairPer)
-inPer = inNum / totalAds * 100.0
-print "Percentage valuing Intelligence: " + str(inPer)
+#inPer = inNum / totalAds * 100.0
+#inPer = int(inPer)
+#print "Percentage valuing Intelligence: " + str(inPer)
 ginPer = ginNum / totalAds * 100.0
+ginPer = int(ginPer)
 print "Percentage valuing Intelligent brides: " + str(ginPer)
+
+#Loop through Fair List and print the Ads
+for fair in fairList:
+    print fair
+#Loop through Intelligent List and print the Ads
+for intelligent in intelligentList:
+    print intelligent
