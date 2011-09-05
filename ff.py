@@ -5,6 +5,7 @@
 from BeautifulSoup import BeautifulSoup
 import urllib2
 import re
+import time
 
 def findRegex(findStr, regexStr):
     found = False
@@ -95,6 +96,7 @@ def girlIntelligenceFunction(ginStr, idNum, ginNum):
         intelligentList.append(ginStr)
     return ginNum
     
+start = time.clock()
 
 #Loop through 10 marriage classified pages
 
@@ -162,3 +164,6 @@ for fair in fairList:
 #Loop through Intelligent List and print the Ads
 for intelligent in intelligentList:
     print intelligent
+
+end = time.clock()
+print "Time elapsed: " + str((end - start)/60.0) + " minutes" 
